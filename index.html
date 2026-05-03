@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kyrillos Kamal | IT & Cybersecurity Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b14;
+      --surface: #151522;
+      --surface-light: #1e1e2e;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --indigo: #4f46e5;
+      --pink: #ec4899;
+      --cyan: #06b6d4;
+      --amber: #f59e0b;
+      --nav-height: 70px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(var(--indigo), var(--pink)); border-radius: 4px; }
+
+    /* Noise Overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Loader */
+    #loader {
+      position: fixed; inset: 0; background: var(--bg); z-index: 1000;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .loader-initials {
+      font-family: 'Syne', sans-serif; font-size: 4rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--indigo), var(--pink), var(--cyan));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    .progress-container { width: 200px; height: 4px; background: var(--surface); border-radius: 2px; overflow: hidden; }
+    .progress-bar {
+      height: 100%; width: 0; border-radius: 2px;
+      background: linear-gradient(90deg, var(--indigo), var(--pink), var(--cyan), var(--amber));
+      animation: fillProgress 2s linear forwards;
+    }
+    @keyframes fillProgress { to { width: 100%; } }
+
+    /* Cursor */
+    #cursor-dot, #cursor-ring {
+      position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%); border-radius: 50%;
+    }
+    #cursor-dot { width: 8px; height: 8px; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+    #cursor-ring {
+      width: 36px; height: 36px; border: 2px solid rgba(236, 72, 153, 0.6);
+      transition: width 0.2s, height 0.2s, background 0.2s;
+    }
+    body.hovering #cursor-ring { width: 50px; height: 50px; background: rgba(236, 72, 153, 0.1); }
+    @media (max-width: 768px) { #cursor-dot, #cursor-ring { display: none; } body { cursor: auto; } }
+
+    /* Canvas */
+    #particle-canvas {
+      position: fixed; inset: 0; z-index: -1; opacity: 0.6;
+    }
+
+    /* Navbar */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--nav-height);
+      background: rgba(21, 21, 34, 0.7); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 100;
+      display: flex; justify-content: space-between; align-items: center; padding: 0 5%;
+      transform: translateY(-100%); animation: slideDown 0.8s ease 2.2s forwards;
+    }
+    @keyframes slideDown { to { transform: translateY(0); } }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--text); text-decoration: none; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
+      color: var(--text-muted); text-decoration: none; font-weight: 500; position: relative; padding-bottom: 4px;
+      transition: color 0.3s;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--pink));
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Sections Base */
+    section { padding: 100px 5% 60px; position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; }
+    h2 { font-family: 'Syne', sans-serif; font-size: 2.5rem; margin-bottom: 2.5rem; background: linear-gradient(90deg, var(--text), var(--text-muted)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Hero */
+    .hero { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; align-items: center; min-height: calc(100vh - var(--nav-height)); padding-top: 120px; }
+    .hero-left .tag {
+      display: inline-block; padding: 6px 14px; background: rgba(6, 182, 212, 0.15); border: 1px solid var(--cyan);
+      color: var(--cyan); border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem;
+    }
+    .hero-name {
+      font-family: 'Syne', sans-serif; font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1rem;
+      background: linear-gradient(120deg, var(--text) 20%, var(--pink) 40%, var(--cyan) 60%, var(--amber) 80%, var(--text) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: shimmer 4s linear infinite;
+    }
+    @keyframes shimmer { to { background-position: -200% center; } }
+    .hero-subtitle { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 2rem; }
+    .cta-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: linear-gradient(135deg, var(--indigo), var(--pink)); color: white; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4); }
+    .btn-outline { background: transparent; border: 2px solid var(--text-muted); color: var(--text); }
+    .btn-outline:hover { border-color: var(--cyan); box-shadow: 0 0 15px rgba(6, 182, 212, 0.3); }
+
+    .hero-right { position: relative; display: flex; justify-content: center; perspective: 1000px; }
+    .glow-orb {
+      position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, var(--indigo) 0%, transparent 70%);
+      filter: blur(60px); opacity: 0.5; z-index: 0; animation: pulseOrb 4s ease-in-out infinite;
+    }
+    @keyframes pulseOrb { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 0.3; } }
+    .hero-card {
+      background: rgba(30, 30, 46, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px; padding: 2.5rem; text-align: center; position: relative; z-index: 2;
+      transform-style: preserve-3d; animation: floatCard 6s ease-in-out infinite, rotateY 10s linear infinite;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    @keyframes floatCard { 0%, 100% { transform: translateY(0) rotateY(5deg); } 50% { transform: translateY(-15px) rotateY(-5deg); } }
+    @keyframes rotateY { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+    .avatar-ring {
+      width: 100px; height: 100px; border: 2px dashed var(--amber); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;
+      animation: spinDash 8s linear infinite;
+    }
+    @keyframes spinDash { to { transform: rotate(360deg); } }
+    .avatar-initials { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 700; color: var(--text); }
+    .hero-role { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; text-align: center; }
+    .stat-val { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--cyan); }
+    .stat-label { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Skills */
+    .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .skill-item { margin-bottom: 1.5rem; }
+    .skill-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-weight: 500; }
+    .skill-bar-bg { width: 100%; height: 8px; background: var(--surface); border-radius: 4px; overflow: hidden; position: relative; }
+    .skill-bar-fill { height: 100%; width: 0; border-radius: 4px; transition: width 1.5s cubic-bezier(0.2, 1, 0.3, 1); position: relative; }
+    .skill-bar-fill::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transform: skewX(-20deg) translateX(-150%); transition: transform 0.5s;
+    }
+    .skill-bar-fill.animate::after { transform: skewX(-20deg) translateX(150%); }
+    .chip-cloud { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.5rem; }
+    .chip {
+      padding: 8px 16px; background: var(--surface); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px;
+      font-size: 0.85rem; color: var(--text-muted); transition: all 0.3s; cursor: default;
+    }
+    .chip:hover { transform: translateY(-4px); background: rgba(79, 70, 229, 0.2); border-color: var(--indigo); color: var(--text); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
+
+    /* Experience */
+    .timeline { position: relative; padding-left: 30px; }
+    .timeline::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+      background: linear-gradient(180deg, var(--indigo), var(--pink), var(--cyan), transparent);
+      border-radius: 2px; animation: gradientShift 4s ease infinite;
+      background-size: 100% 200%;
+    }
+    @keyframes gradientShift { 0% { background-position: 0% 0%; } 50% { background-position: 0% 100%; } 100% { background-position: 0% 0%; } }
+    .exp-card {
+      background: var(--surface); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.05); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateX(-30px); opacity: 0;
+    }
+    .exp-card.visible { transform: translateX(0); opacity: 1; }
+    .exp-card:hover { transform: translateX(10px) translateY(-5px); box-shadow: 0 10px 30px rgba(6, 182, 212, 0.15); border-color: var(--cyan); }
+    .exp-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 0.5rem; }
+    .exp-title { font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text); }
+    .exp-meta { font-size: 0.85rem; color: var(--text-muted); }
+    .exp-company { color: var(--amber); font-weight: 600; margin-bottom: 0.5rem; }
+    .exp-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+    .badge { font-size: 0.7rem; padding: 4px 8px; background: rgba(245, 158, 11, 0.15); color: var(--amber); border-radius: 4px; }
+    .exp-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-top: 0.5rem; }
+
+    /* Projects */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .project-card {
+      background: var(--surface); border-radius: 12px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.05);
+      position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .project-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
+    .project-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--indigo), var(--pink), var(--cyan), var(--amber));
+      transform: scaleX(0); transform-origin: left; transition: transform 0.5s ease;
+    }
+    .project-card:hover::before { transform: scaleX(1); }
+    .project-icon { font-size: 2rem; margin-bottom: 1rem; display: inline-block; }
+    .project-title { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .project-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .project-tag { font-size: 0.75rem; padding: 4px 8px; background: var(--surface-light); color: var(--cyan); border-radius: 4px; }
+
+    /* Education & Languages */
+    .edu-lang { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .edu-card { background: var(--surface); padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--pink); }
+    .edu-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem; margin-bottom: 0.25rem; }
+    .edu-inst { color: var(--text-muted); font-size: 0.9rem; }
+    .edu-year { display: inline-block; margin-top: 0.5rem; font-size: 0.8rem; color: var(--amber); background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 4px; }
+    .lang-grid { display: flex; flex-direction: column; gap: 1rem; justify-content: center; }
+    .lang-item { display: flex; align-items: center; justify-content: space-between; background: var(--surface); padding: 1rem; border-radius: 8px; }
+    .lang-badge { padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; }
+    .lang-native { background: rgba(6, 182, 212, 0.2); color: var(--cyan); }
+    .lang-prof { background: rgba(236, 72, 153, 0.2); color: var(--pink); }
+
+    /* Contact */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    .contact-cards { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-card {
+      background: var(--surface); padding: 1rem 1.25rem; border-radius: 10px; display: flex; align-items: center; gap: 1rem;
+      border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s;
+    }
+    .contact-card:hover { transform: translateX(10px); border-color: var(--indigo); box-shadow: 0 5px 20px rgba(79, 70, 229, 0.2); }
+    .contact-icon { width: 40px; height: 40px; background: var(--surface-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .contact-info h4 { font-size: 0.9rem; color: var(--text); }
+    .contact-info p { font-size: 0.8rem; color: var(--text-muted); }
+    .contact-right { display: flex; justify-content: center; align-items: center; position: relative; }
+    .avatar-ripple {
+      width: 140px; height: 140px; background: var(--surface); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; color: var(--text); position: relative; z-index: 2;
+    }
+    .ripple {
+      position: absolute; border: 2px solid var(--pink); border-radius: 50%; width: 140px; height: 140px;
+      animation: rippleAnim 3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+    .ripple:nth-child(2) { animation-delay: 1s; }
+    .ripple:nth-child(3) { animation-delay: 2s; }
+    @keyframes rippleAnim {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    /* Marquee */
+    .marquee-container { overflow: hidden; background: var(--surface); padding: 1.5rem 0; margin: 4rem 0; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .marquee-track { display: flex; gap: 3rem; width: max-content; animation: scrollMarquee 30s linear infinite; }
+    .marquee-item { font-family: 'Syne', sans-serif; font-weight: 600; color: var(--text-muted); opacity: 0.6; font-size: 1.1rem; white-space: nowrap; }
+    @keyframes scrollMarquee { to { transform: translateX(-50%); } }
+
+    /* Footer */
+    footer { text-align: center; padding: 2rem 5%; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.05); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; text-align: center; padding-top: 100px; }
+      .hero-left { order: 2; }
+      .hero-right { order: 1; }
+      .cta-group { justify-content: center; }
+      .skills-grid, .edu-lang, .contact-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; } /* Simplified for mobile, could add hamburger if needed */
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-initials">KK</div>
+    <div class="progress-container"><div class="progress-bar"></div></div>
+  </div>
+
+  <!-- Custom Cursor -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- Particle Canvas -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="#" class="logo">Kyrillos Kamal</a>
+    <div class="nav-links">
+      <a href="#skills">Skills</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#education">Education</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="hero-left">
+        <span class="tag">✅ Available for Opportunities</span>
+        <h1 class="hero-name">Kyrillos Kamal</h1>
+        <p class="hero-subtitle">IT & Network Specialist | Cybersecurity Trainee</p>
+        <div class="cta-group">
+          <a href="#contact" class="btn btn-primary">Get In Touch</a>
+          <a href="https://linkedin.com/in/kyrillos-kamal" target="_blank" class="btn btn-outline">LinkedIn</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="glow-orb"></div>
+        <div class="hero-card">
+          <div class="avatar-ring"><span class="avatar-initials">KK</span></div>
+          <div class="hero-role">Infrastructure & Security</div>
+          <div class="stats-grid">
+            <div><div class="stat-val">6+</div><div class="stat-label">Years Exp</div></div>
+            <div><div class="stat-val">180+</div><div class="stat-label">APs Managed</div></div>
+            <div><div class="stat-val">99%</div><div class="stat-label">Uptime</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills">
+      <h2 class="reveal">Technical Expertise</h2>
+      <div class="skills-grid">
+        <div class="reveal">
+          <div class="skill-item">
+            <div class="skill-header"><span>FortiGate & Sophos Firewalls</span><span>90%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90%" style="background: linear-gradient(90deg, var(--indigo), var(--cyan));"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header"><span>Network Administration (CCNA)</span><span>95%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="95%" style="background: linear-gradient(90deg, var(--cyan), var(--amber));"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header"><span>Windows Server & Active Directory</span><span>85%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85%" style="background: linear-gradient(90deg, var(--pink), var(--indigo));"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header"><span>Linux Administration</span><span>80%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="80%" style="background: linear-gradient(90deg, var(--amber), var(--cyan));"></div></div>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="skill-item">
+            <div class="skill-header"><span>Cybersecurity & Threat Prevention</span><span>70%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="70%" style="background: linear-gradient(90deg, var(--pink), var(--indigo));"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header"><span>Virtualization & Cloud</span><span>75%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="75%" style="background: linear-gradient(90deg, var(--indigo), var(--amber));"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header"><span>Shell Scripting & Automation</span><span>65%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="65%" style="background: linear-gradient(90deg, var(--cyan), var(--pink));"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header"><span>Endpoint Protection & ITIL</span><span>88%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="88%" style="background: linear-gradient(90deg, var(--amber), var(--indigo));"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="chip-cloud reveal">
+        <span class="chip">VLANs</span><span class="chip">ACLs</span><span class="chip">NAT</span>
+        <span class="chip">Wireshark</span><span class="chip">DNS/DHCP</span><span class="chip">GPO</span>
+        <span class="chip">Ubuntu/CentOS</span><span class="chip">VMware/Hyper-V</span>
+        <span class="chip">IDS/IPS</span><span class="chip">SSL Inspection</span>
+        <span class="chip">Omada Controller</span><span class="chip">Packet Analysis</span>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience">
+      <h2 class="reveal">Professional Experience</h2>
+      <div class="timeline">
+        <div class="exp-card reveal">
+          <div class="exp-header"><div class="exp-title">Assistant IT Manager</div><div class="exp-meta">Dec 2025 – Present</div></div>
+          <div class="exp-company">Lazuli Marsa Allam | Marsa Allam, Egypt</div>
+          <div class="exp-desc">Took ownership of large-scale hotel IT infrastructure post-incomplete handover. Stabilized networks across /16 IP range, documented assets, and enforced IT policies. Managed 180+ APs, 200+ IP cameras, AD/DC, PMS, accounting systems, and electronic locks. Coordinated vendors for PBX, IPTV, and fire systems.</div>
+          <div class="exp-badges"><span class="badge">Infrastructure Recovery</span><span class="badge">Network Segmentation</span><span class="badge">Policy Enforcement</span></div>
+        </div>
+        <div class="exp-card reveal">
+          <div class="exp-header"><div class="exp-title">Network Administrator</div><div class="exp-meta">Feb 2024 – Dec 2025</div></div>
+          <div class="exp-company">Stella Sidi Abd El-Rahman Resort | North Coast, Egypt</div>
+          <div class="exp-desc">Maintained LAN/WAN/Wi-Fi with 99% uptime. Configured segmented routers, switches, and APs. Managed VPNs, conferencing tools, and CCTV. Handled helpdesk prioritization and log monitoring for minimal downtime.</div>
+          <div class="exp-badges"><span class="badge">High Availability</span><span class="badge">Remote Admin VPN</span><span class="badge">Multimedia Support</span></div>
+        </div>
+        <div class="exp-card reveal">
+          <div class="exp-header"><div class="exp-title">IT Specialist</div><div class="exp-meta">Feb 2023 – Jan 2024</div></div>
+          <div class="exp-company">Al-Ahram Plastic Group Sohag | Sohag, Egypt</div>
+          <div class="exp-desc">Administered Windows Server (AD, DNS, DHCP, File Servers). Configured FortiGate & Sophos for VPNs/web filtering. Integrated production machinery IT. Reduced outages via proactive monitoring. Managed ERP workflows and procurement.</div>
+          <div class="exp-badges"><span class="badge">Firewall Configuration</span><span class="badge">ERP Integration</span><span class="badge">Vendor Management</span></div>
+        </div>
+        <div class="exp-card reveal">
+          <div class="exp-header"><div class="exp-title">IT Helpdesk</div><div class="exp-meta">Jan 2022 – Jan 2023</div></div>
+          <div class="exp-company">Askyadoc | Cairo, Egypt</div>
+          <div class="exp-desc">First-line support for 150+ hybrid/e-learning users. Troubleshot Windows/Linux/web systems. Maintained LMS uptime. Created troubleshooting guides, trained users, reduced tickets, ensured SLA compliance.</div>
+          <div class="exp-badges"><span class="badge">LMS Support</span><span class="badge">Ticket Management</span><span class="badge">User Training</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects (Derived from Resume Infrastructure Deployments) -->
+    <section id="projects">
+      <h2 class="reveal">Key Infrastructure Projects</h2>
+      <div class="projects-grid">
+        <div class="project-card reveal">
+          <div class="project-icon">🏨</div>
+          <div class="project-title">Hotel IT Infrastructure Overhaul</div>
+          <div class="project-desc">Full discovery, documentation, and stabilization of a large-scale hospitality network. Implemented logical segmentation for Staff, Guest, CCTV, Servers, and IPTV across a /16 subnet.</div>
+          <div class="project-tags"><span class="project-tag">Network Mapping</span><span class="project-tag">Omada Controller</span><span class="project-tag">ITIL Policy</span></div>
+        </div>
+        <div class="project-card reveal">
+          <div class="project-icon">🛡️</div>
+          <div class="project-title">Enterprise Firewall & Security Deployment</div>
+          <div class="project-desc">Configured FortiGate and Sophos firewalls for secure remote access, SSL inspection, and web filtering. Integrated threat prevention and IDS/IPS for production environments.</div>
+          <div class="project-tags"><span class="project-tag">FortiGate NSE4</span><span class="project-tag">Sophos</span><span class="project-tag">SSL Inspection</span></div>
+        </div>
+        <div class="project-card reveal">
+          <div class="project-icon">🌐</div>
+          <div class="project-title">High-Density Wireless & CCTV Network</div>
+          <div class="project-desc">Deployed and centralized management for 180+ wireless access points and 200+ IP cameras. Ensured network isolation, QoS optimization, and 99% service uptime for resort operations.</div>
+          <div class="project-tags"><span class="project-tag">VLAN Segmentation</span><span class="project-tag">PoE Management</span><span class="project-tag">Wireshark</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Education & Languages -->
+    <section id="education">
+      <h2 class="reveal">Education & Certifications</h2>
+      <div class="edu-lang">
+        <div class="reveal">
+          <div class="edu-card">
+            <div class="edu-title">Bachelor’s Degree in Computer Science</div>
+            <div class="edu-inst">Modern Academy, Maadi</div>
+            <div class="edu-year">Graduated 2018</div>
+          </div>
+          <div style="margin-top: 1.5rem;">
+            <div class="edu-card" style="border-left-color: var(--cyan);">
+              <div class="edu-title">Certifications</div>
+              <div class="edu-inst">NSE4, Sophos Firewall, MCSE, Linux Admin, CCNA, CompTIA A+</div>
+              <div class="edu-year">In Progress: Red Teaming, eJPT, WAPT, Bug Bounty</div>
+            </div>
+          </div>
+        </div>
+        <div class="lang-grid reveal">
+          <div class="lang-item">
+            <span style="font-weight: 500;">Arabic</span>
+            <span class="lang-badge lang-native">Native</span>
+          </div>
+          <div class="lang-item">
+            <span style="font-weight: 500;">English</span>
+            <span class="lang-badge lang-prof">Professional</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+      <h2 class="reveal">Get In Touch</h2>
+      <div class="contact-grid">
+        <div class="contact-cards reveal">
+          <div class="contact-card">
+            <div class="contact-icon">📧</div>
+            <div class="contact-info"><h4>Email</h4><p>kyrillos.kamal@proton.me</p></div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-icon">📱</div>
+            <div class="contact-info"><h4>Phone</h4><p>+20122 801 1332</p></div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-icon">📍</div>
+            <div class="contact-info"><h4>Location</h4><p>Hadayek El Kobba, Cairo, Egypt</p></div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-icon">💼</div>
+            <div class="contact-info"><h4>Availability</h4><p>Open to Network Security & Junior Penetration Tester roles</p></div>
+          </div>
+        </div>
+        <div class="contact-right reveal">
+          <div class="avatar-ripple">KK</div>
+          <div class="ripple"></div>
+          <div class="ripple"></div>
+          <div class="ripple"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee-container">
+      <div class="marquee-track">
+        <span class="marquee-item">Lazuli Hotels</span><span class="marquee-item">Stella Resorts</span><span class="marquee-item">Al-Ahram Plastic</span><span class="marquee-item">Askyadoc</span><span class="marquee-item">Fortinet</span><span class="marquee-item">Sophos</span><span class="marquee-item">Cisco</span><span class="marquee-item">Microsoft</span><span class="marquee-item">CompTIA</span><span class="marquee-item">Red Teaming Labs</span>
+        <span class="marquee-item">Lazuli Hotels</span><span class="marquee-item">Stella Resorts</span><span class="marquee-item">Al-Ahram Plastic</span><span class="marquee-item">Askyadoc</span><span class="marquee-item">Fortinet</span><span class="marquee-item">Sophos</span><span class="marquee-item">Cisco</span><span class="marquee-item">Microsoft</span><span class="marquee-item">CompTIA</span><span class="marquee-item">Red Teaming Labs</span>
+      </div>
+    </div>
+
+    <footer>
+      <p>© 2026 Kyrillos Kamal. Built with pure HTML, CSS & JS.</p>
+    </footer>
+  </main>
+
+  <script>
+    // Loader Fade Out
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+      }, 2000);
+    });
+
+    // Custom Cursor
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      dot.style.left = mouseX + 'px'; dot.style.top = mouseY + 'px';
+    });
+
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.15;
+      ringY += (mouseY - ringY) * 0.15;
+      ring.style.left = ringX + 'px'; ring.style.top = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button, .btn, .chip, .project-card, .contact-card').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
+
+    // Particle Canvas
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const colors = ['#4f46e5', '#ec4899', '#06b6d4', '#f59e0b'];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.radius = Math.random() * 2 + 1;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
+      update() {
+        this.x += this.vx; this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = Math.min(window.innerWidth * 0.08, 120);
+      for (let i = 0; i < count; i++) particles.push(new Particle());
+    }
+    initParticles();
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, i) => {
+        p.update(); p.draw();
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(148, 163, 184, ${1 - dist / 120})`;
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // Intersection Observer for Scroll Animations
+    const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Animate skill bars
+          const bars = entry.target.querySelectorAll('.skill-bar-fill');
+          bars.forEach(bar => {
+            const width = bar.getAttribute('data-width');
+            bar.style.width = width;
+            setTimeout(() => bar.classList.add('animate'), 100);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal, .exp-card').forEach(el => observer.observe(el));
+
+    // Smooth Scroll Offset for Fixed Nav
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if(target) {
+          const offset = 80;
+          const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
