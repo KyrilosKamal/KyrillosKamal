@@ -10,15 +10,11 @@
 
 ### 🏆 TryHackMe Progress (auto-updates)
 
-<p align="center">
   <iframe 
   src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=68bec025528d80e31cd92fb6" 
   style="border:none; width:329px; height:200px;"
   title="TryHackMe Stats">
 </iframe>
-</p>
-
-> Badge image refreshes daily via GitHub Action + manual trigger after finishing rooms.
 
 ---
 
