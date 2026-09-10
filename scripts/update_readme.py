@@ -1,0 +1,148 @@
+#!/usr/bin/env python3
+"""
+Fetch TryHackMe public profile stats and update README.md automatically.
+Runs via GitHub Actions every 6 hours.
+"""
+
+import re
+import sys
+import json
+import requests
+from datetime import datetime, timezone
+from pathlib import Path
+
+# ── Configuration ─────────────────────────────────────────────
+THM_USERNAME = "Hackth3Path"
+README_PATH = Path("README.md")
+THM_PROFILE_URL = f"https://tryhackme.com/api/v2/public/profile?username={THM_USERNAME}"
+THM_BADGES_URL = f"https://tryhackme.com/api/v2/public/badges?username={THM_USERNAME}"
+
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/120.0.0.0 Safari/537.36"
+    ),
+    "Accept": "application/json",
+}
+
+
+def fetch_json(url):
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=20)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"⚠️ Request failed for {url}: {e}")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"⚠️ JSON decode failed for {url}: {e}")
+        return None
+
+
+def get_profile_stats():
+    data = fetch_json(THM_PROFILE_URL)
+    if not data:
+        return None
+
+    user = data.get("data", {}) or data
+    stats = {
+        "rank": user.get("rank") or user.get("ranking") or "N/A",
+        "badges": user.get("badges") or user.get("badgeCount") or "N/A",
+        "streak": user.get("streak") or user.get("streakCount") or "N/A",
+        "completed_rooms": (
+            user.get("completedRooms")
+            or user.get("completed_rooms")
+            or user.get("roomsCompleted")
+            or "N/A"
+        ),
+    }
+    return stats
+
+
+def get_badges_count():
+    data = fetch_json(THM_BADGES_URL)
+    if not data:
+        return None
+    badges = data.get("data") or data
+    if isinstance(badges, list):
+        return len(badges)
+    if isinstance(badges, dict):
+        inner = badges.get("badges")
+        if isinstance(inner, list):
+            return len(inner)
+    return None
+
+
+def format_stats_table(stats):
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    rows = [
+        ("🏅 Rank", stats.get("rank", "N/A")),
+        ("🎖️ Badges", stats.get("badges", "N/A")),
+        ("🔥 Streak", stats.get("streak", "N/A")),
+        ("🚪 Completed Rooms", stats.get("completed_rooms", "N/A")),
+        ("📅 Last Updated", timestamp),
+    ]
+    lines = ["| Stat | Value |", "|------|-------|"]
+    for label, value in rows:
+        lines.append(f"| {label} | {value} |")
+    return "\n".join(lines)
+
+
+def update_readme(stats_table):
+    if not README_PATH.exists():
+        print("⚠️ README.md not found")
+        return False
+
+    content = README_PATH.read_text(encoding="utf-8")
+    pattern = re.compile(
+        r"(<!-- THM_STATS_START -->)(.*?)(<!-- THM_STATS_END -->)",
+        re.DOTALL,
+    )
+    replacement = (
+        "<!-- THM_STATS_START -->\n"
+        f"{stats_table}\n"
+        "<!-- THM_STATS_END -->"
+    )
+
+    if not pattern.search(content):
+        print("⚠️ THM_STATS markers not found in README.md")
+        return False
+
+    new_content = pattern.sub(replacement, content)
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    new_content = re.sub(
+        r"<!-- LAST_UPDATED: .* -->",
+        f"<!-- LAST_UPDATED: {timestamp} -->",
+        new_content,
+    )
+
+    README_PATH.write_text(new_content, encoding="utf-8")
+    print("✅ README.md updated successfully")
+    return True
+
+
+def main():
+    print(f"🔍 Fetching stats for THM user: {THM_USERNAME}")
+    stats = get_profile_stats()
+
+    if not stats:
+        print("❌ Could not fetch profile stats")
+        sys.exit(1)
+
+    if stats.get("badges") in (None, "N/A"):
+        badges_count = get_badges_count()
+        if badges_count is not None:
+            stats["badges"] = badges_count
+
+    print(f"📊 Stats: {stats}")
+    table = format_stats_table(stats)
+
+    if not update_readme(table):
+        sys.exit(1)
+
+    print("🎉 Done!")
+
+
+if __name__ == "__main__":
+    main()
