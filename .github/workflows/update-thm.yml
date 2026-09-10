@@ -1,0 +1,59 @@
+```yaml
+name: 🔄 Update TryHackMe Badge & Stats
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-thm:
+    name: Update THM Badge and Stats
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: 📁 Create assets directory
+        run: mkdir -p assets
+
+      - name: 🎖️ Download THM Badge
+        run: |
+          curl -L -f -o assets/badge.png \
+            "https://tryhackme-badges.s3.amazonaws.com/Hackth3Path.png" \
+            || echo "⚠️ Badge download failed"
+
+      - name: 🐍 Update README with THM stats
+        run: python scripts/update_readme.py
+
+      - name: 🚀 Commit & Push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions Bot"
+          git add assets/ README.md
+
+          if git diff --staged --quiet; then
+            echo "✅ No changes detected"
+          else
+            git commit -m "🔄 Auto-update THM stats - $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
