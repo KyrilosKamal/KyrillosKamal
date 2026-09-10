@@ -7,6 +7,7 @@ Runs via GitHub Actions every 6 hours.
 import re
 import sys
 import json
+import time
 import requests
 from datetime import datetime, timezone
 from pathlib import Path
@@ -26,25 +27,36 @@ HEADERS = {
     "Accept": "application/json",
 }
 
-
-def fetch_json(url):
-    try:
-        response = requests.get(url, headers=HEADERS, timeout=20)
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"⚠️ Request failed for {url}: {e}")
-        return None
-    except json.JSONDecodeError as e:
-        print(f"⚠️ JSON decode failed for {url}: {e}")
-        return None
-
+def fetch_json(url, max_retries=3):
+    """
+    Fetch JSON from a URL with retry and exponential backoff for 429 errors.
+    """
+    for attempt in range(max_retries):
+        try:
+            response = requests.get(url, headers=HEADERS, timeout=20)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 429:
+                wait_time = (2 ** attempt) * 5  # 5s, 10s, 20s
+                print(f"⏳ Rate limited. Waiting {wait_time}s before retry {attempt + 1}/{max_retries}...")
+                time.sleep(wait_time)
+            else:
+                print(f"⚠️ HTTP error for {url}: {e}")
+                return None
+        except requests.exceptions.RequestException as e:
+            print(f"⚠️ Request failed for {url}: {e}")
+            return None
+        except json.JSONDecodeError as e:
+            print(f"⚠️ JSON decode failed for {url}: {e}")
+            return None
+    print(f"❌ Failed to fetch {url} after {max_retries} attempts")
+    return None
 
 def get_profile_stats():
     data = fetch_json(THM_PROFILE_URL)
     if not data:
         return None
-
     user = data.get("data", {}) or data
     stats = {
         "rank": user.get("rank") or user.get("ranking") or "N/A",
@@ -59,7 +71,6 @@ def get_profile_stats():
     }
     return stats
 
-
 def get_badges_count():
     data = fetch_json(THM_BADGES_URL)
     if not data:
@@ -72,7 +83,6 @@ def get_badges_count():
         if isinstance(inner, list):
             return len(inner)
     return None
-
 
 def format_stats_table(stats):
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -88,12 +98,10 @@ def format_stats_table(stats):
         lines.append(f"| {label} | {value} |")
     return "\n".join(lines)
 
-
 def update_readme(stats_table):
     if not README_PATH.exists():
         print("⚠️ README.md not found")
         return False
-
     content = README_PATH.read_text(encoding="utf-8")
     pattern = re.compile(
         r"(<!-- THM_STATS_START -->)(.*?)(<!-- THM_STATS_END -->)",
@@ -104,11 +112,9 @@ def update_readme(stats_table):
         f"{stats_table}\n"
         "<!-- THM_STATS_END -->"
     )
-
     if not pattern.search(content):
         print("⚠️ THM_STATS markers not found in README.md")
         return False
-
     new_content = pattern.sub(replacement, content)
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     new_content = re.sub(
@@ -116,33 +122,25 @@ def update_readme(stats_table):
         f"<!-- LAST_UPDATED: {timestamp} -->",
         new_content,
     )
-
     README_PATH.write_text(new_content, encoding="utf-8")
     print("✅ README.md updated successfully")
     return True
 
-
 def main():
     print(f"🔍 Fetching stats for THM user: {THM_USERNAME}")
     stats = get_profile_stats()
-
     if not stats:
         print("❌ Could not fetch profile stats")
         sys.exit(1)
-
     if stats.get("badges") in (None, "N/A"):
         badges_count = get_badges_count()
         if badges_count is not None:
             stats["badges"] = badges_count
-
     print(f"📊 Stats: {stats}")
     table = format_stats_table(stats)
-
     if not update_readme(table):
         sys.exit(1)
-
     print("🎉 Done!")
-
 
 if __name__ == "__main__":
     main()
