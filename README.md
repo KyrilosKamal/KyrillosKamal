@@ -44,12 +44,21 @@
   <img src="https://raw.githubusercontent.com/KyrilosKamal/KyrilosKamal/main/assets/thm_badge.png" alt="TryHackMe badge"/>
 </p>
 
-
-
-
+**Rank:** 68137 (top 3%)  
+**Level:** 64  
+**Badges:** 16
 
 **Recently completed rooms:**
-_Room list unavailable this sync — screenshot badge still current._
+- Ninja Skills
+- OpenVPN
+- Encryption - Crypto 101
+- Linux Fundamentals Part 1
+- How Websites Work
+- Putting it all together
+- DNS in Detail
+- HTTP in Detail
+- What is Networking?
+- Pentesting Fundamentals
 
-<sub>Last synced: 2026-09-10T09:47:24.155Z</sub>
+<sub>Last synced: 2026-09-10T09:48:50.000Z</sub>
 <!--THM:END-->
