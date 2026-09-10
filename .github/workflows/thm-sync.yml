@@ -1,0 +1,42 @@
+name: THM Sync
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # كل 6 ساعات
+  workflow_dispatch:         # تشغيل يدوي بعد أي إنجاز جديد
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Playwright
+        run: |
+          npm init -y
+          npm install playwright
+          npx playwright install --with-deps chromium
+
+      - name: Scrape TryHackMe profile
+        run: node scripts/thm-scrape.mjs
+        env:
+          THM_USERNAME: Hackth3Path
+          THM_USER_PUBLIC_ID: 68bec025528d80e31cd92fb6
+
+      - name: Update README.md
+        run: node scripts/update-readme.mjs
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/thm_badge.png data/thm-data.json README.md
+          git diff --cached --quiet || git commit -m "chore: sync TryHackMe stats"
+          git push
