@@ -87,6 +87,12 @@ goal: NetSec / Junior Pentester
 
 ---
 
+### 📊 Stats
+
+Check my live stats on [TryHackMe](https://tryhackme.com/p/Hackth3Path) 🚀
+
+---
+
 ## 📊 GitHub Stats
 
 <p align="center">
