@@ -2,8 +2,8 @@ name: TryHackMe Update Badge
 
 on:
   schedule:
-    - cron: '0 */6 * * *'   # كل 6 ساعات
-  workflow_dispatch:         # زرار Run manually بعد ما تخلص أي room
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
 
 jobs:
   tryhackme-badge-update:
