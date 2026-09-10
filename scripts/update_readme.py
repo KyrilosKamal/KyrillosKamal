@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetch TryHackMe public profile stats and update README.md automatically.
-Runs via GitHub Actions every 6 hours.
+Fetch TryHackMe public profile stats using userPublicId.
 """
 
 import re
@@ -13,10 +12,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 # ── Configuration ─────────────────────────────────────────────
-THM_USERNAME = "Hackth3Path"
+# ⚠️ تم وضع userPublicId الخاص بك هنا
+THM_USER_PUBLIC_ID = "68bec025528d80e31cd92fb6"
 README_PATH = Path("README.md")
-THM_PROFILE_URL = f"https://tryhackme.com/api/v2/public/profile?username={THM_USERNAME}"
-THM_BADGES_URL = f"https://tryhackme.com/api/v2/public/badges?username={THM_USERNAME}"
+
+# استخدام userPublicId في نقاط النهاية
+THM_PROFILE_URL = f"https://tryhackme.com/api/v2/badges/public-profile?userPublicId={THM_USER_PUBLIC_ID}"
+THM_BADGES_URL = f"https://tryhackme.com/api/v2/badges/public-profile?userPublicId={THM_USER_PUBLIC_ID}"
 
 HEADERS = {
     "User-Agent": (
@@ -57,7 +59,11 @@ def get_profile_stats():
     data = fetch_json(THM_PROFILE_URL)
     if not data:
         return None
+
+    # userPublicId endpoint يعيد البيانات مباشرة أو داخل "data"
     user = data.get("data", {}) or data
+    
+    # محاولة استخراج البيانات من هيكل الرد
     stats = {
         "rank": user.get("rank") or user.get("ranking") or "N/A",
         "badges": user.get("badges") or user.get("badgeCount") or "N/A",
@@ -70,19 +76,6 @@ def get_profile_stats():
         ),
     }
     return stats
-
-def get_badges_count():
-    data = fetch_json(THM_BADGES_URL)
-    if not data:
-        return None
-    badges = data.get("data") or data
-    if isinstance(badges, list):
-        return len(badges)
-    if isinstance(badges, dict):
-        inner = badges.get("badges")
-        if isinstance(inner, list):
-            return len(inner)
-    return None
 
 def format_stats_table(stats):
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -127,15 +120,11 @@ def update_readme(stats_table):
     return True
 
 def main():
-    print(f"🔍 Fetching stats for THM user: {THM_USERNAME}")
+    print(f"🔍 Fetching stats for THM user ID: {THM_USER_PUBLIC_ID}")
     stats = get_profile_stats()
     if not stats:
         print("❌ Could not fetch profile stats")
         sys.exit(1)
-    if stats.get("badges") in (None, "N/A"):
-        badges_count = get_badges_count()
-        if badges_count is not None:
-            stats["badges"] = badges_count
     print(f"📊 Stats: {stats}")
     table = format_stats_table(stats)
     if not update_readme(table):
