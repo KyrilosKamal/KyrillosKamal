@@ -1,0 +1,17 @@
+name: TryHackMe Update Badge
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs every 24 hours
+  workflow_dispatch:    # Allows manual trigger
+
+jobs:
+  tryhackme-badge-update:
+    name: Update this repo's tryhackme badge
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: p4p1/tryhackme-badge-workflow@main
+        with:
+          username: "Hackth3Path" # ضع اسمك على TryHackMe هنا
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
