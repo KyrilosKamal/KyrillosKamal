@@ -8,16 +8,6 @@
 
 ---
 
-### 🏆 TryHackMe Progress (auto-updates)
-
-  <iframe 
-  src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=68bec025528d80e31cd92fb6" 
-  style="border:none; width:329px; height:200px;"
-  title="TryHackMe Stats">
-</iframe>
-
----
-
 ### 🎓 Certifications
 
 ![CCNA](https://img.shields.io/badge/CCNA-1BA0D7?style=flat&logo=cisco&logoColor=white)
@@ -45,3 +35,30 @@
 ---
 
 <p align="center"><i>Updated automatically — last sync: see commit history above.</i></p>
+
+
+<!--THM:START-->
+### 🏆 TryHackMe Progress
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/KyrilosKamal/KyrilosKamal/main/assets/thm_badge.png" alt="TryHackMe badge"/>
+</p>
+
+**Rank:** 68137 (top 3%)  
+**Level:** 64  
+**Badges:** 16
+
+**Recently completed rooms:**
+- Ninja Skills
+- OpenVPN
+- Encryption - Crypto 101
+- Linux Fundamentals Part 1
+- How Websites Work
+- Putting it all together
+- DNS in Detail
+- HTTP in Detail
+- What is Networking?
+- Pentesting Fundamentals
+
+<sub>Last synced: 2026-09-10T09:38:17.230Z</sub>
+<!--THM:END-->

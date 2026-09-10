@@ -440,6 +440,18 @@
           <div class="project-desc">Deployed and centralized management for 180+ wireless access points and 200+ IP cameras. Ensured network isolation, QoS optimization, and 99% service uptime for resort operations.</div>
           <div class="project-tags"><span class="project-tag">VLAN Segmentation</span><span class="project-tag">PoE Management</span><span class="project-tag">Wireshark</span></div>
         </div>
+<div class="project-card reveal">
+  <div class="project-icon">🕵️</div>
+  <div class="project-title">MITM Attack Research — Browsec VPN</div>
+  <div class="project-desc">Identified and documented a real-world MITM attack by the Browsec VPN browser extension rewriting GitHub CDN URLs to a malicious domain. Confirmed via Wireshark traffic analysis; published full writeup with IOCs and remediation.</div>
+  <div class="project-tags"><span class="project-tag">Wireshark</span><span class="project-tag">Traffic Analysis</span><span class="project-tag">IOC Documentation</span></div>
+</div>
+<div class="project-card reveal">
+  <div class="project-icon">📊</div>
+  <div class="project-title">NetMon — Network Monitoring Desktop App</div>
+  <div class="project-desc">Cross-platform network monitor (Python, PySide6) with real-time bandwidth tracking, live connection table with process/PID resolution, and built-in speed test. MVC architecture with QThread workers. Published to the AUR (netmon-gui) and packaged for Windows 10/11.</div>
+  <div class="project-tags"><span class="project-tag">Python</span><span class="project-tag">PySide6</span><span class="project-tag">Multithreading</span></div>
+</div>
       </div>
     </section>
 
@@ -456,8 +468,8 @@
           <div style="margin-top: 1.5rem;">
             <div class="edu-card" style="border-left-color: var(--cyan);">
               <div class="edu-title">Certifications</div>
-              <div class="edu-inst">NSE4, Sophos Firewall, MCSE, Linux Admin, CCNA, CompTIA A+</div>
-              <div class="edu-year">In Progress: Red Teaming, eJPT, WAPT, Bug Bounty</div>
+              <div class="edu-inst">CCNA, NSE4 FortiGate, Sophos Firewall, MCSE, CompTIA A+, Cisco NetAcad Intro to Cybersecurity, Google Technical Support Fundamentals</div>
+              <div class="edu-year">In Progress: eJPT (INE Security), TryHackMe Jr Penetration Tester Path</div>
             </div>
           </div>
         </div>
@@ -473,6 +485,39 @@
         </div>
       </div>
     </section>
+
+    <!-- TryHackMe -->
+<section id="tryhackme">
+  <h2 class="reveal">TryHackMe Progress</h2>
+  <div style="display:flex; flex-direction:column; align-items:center; gap:1rem;">
+    <img id="thm-badge-img" src="assets/thm_badge.png" alt="TryHackMe badge" style="max-width:329px;">
+    <div id="thm-stats" style="color: var(--text-muted); text-align:center;"></div>
+    <ul id="thm-rooms" style="list-style:none; color: var(--text-muted); text-align:center;"></ul>
+  </div>
+</section>
+
+<script>
+  fetch('data/thm-data.json')
+    .then(r => r.json())
+    .then(d => {
+      const stats = document.getElementById('thm-stats');
+      const parts = [];
+      if (d.rank) parts.push(`Rank: ${d.rank.trim()}`);
+      if (d.level) parts.push(`Level: ${d.level.trim()}`);
+      if (d.badgeCount) parts.push(`Badges: ${d.badgeCount}`);
+      stats.textContent = parts.join(' · ');
+
+      const rooms = document.getElementById('thm-rooms');
+      (d.completedRooms || []).slice(0, 8).forEach(r => {
+        const li = document.createElement('li');
+        li.textContent = r;
+        rooms.appendChild(li);
+      });
+    })
+    .catch(() => {
+      document.getElementById('thm-stats').textContent = 'Stats will appear after the next sync.';
+    });
+</script>
 
     <!-- Contact -->
     <section id="contact">
