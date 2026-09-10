@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=Hackth3Path&label=Profile%20Views&color=7B2FFC&style=for-the-badge" alt="Profile Views" />
+  <img src="https://komarev.com/ghpvc/?username=KyrilosKamal&label=Profile%20Views&color=7B2FFC&style=for-the-badge" alt="Profile Views" />
 </p>
 
 ---
@@ -17,110 +17,85 @@
 ## 👨‍💻 About Me
 
 ```yaml
-name: Hackth3Path
+name: KyrilosKamal
+alias: Hackth3Path
 role: IT & Network Specialist → Cybersecurity
 experience: 6+ years
 focus: Red Teaming
 target_certifications: [eJPT, WAPT, Bug Bounty]
 firewalls: [FortiGate, Sophos]
 systems: [Windows, Linux]
-goal: NetSec / Junior Pentester
 ```
 
-> 🎯 **6+ years** of experience in IT & Networking (Net Admin, Systems, Firewalls) → transitioning into **Cybersecurity**.
->
-> 🔥 Currently pursuing **Red Teaming**: eJPT, WAPT, Bug Bounty.
->
-> 🛡️ Skilled in **FortiGate / Sophos**, **Windows / Linux**.
->
-> 💼 Looking for opportunities in **NetSec / Junior Pentester** roles.
+goal: NetSec / Junior Pentester
+🎯 6+ years of experience in IT & Networking (Net Admin, Systems, Firewalls) → transitioning into Cybersecurity.
 
----
+🔥 Currently pursuing Red Teaming: eJPT, WAPT, Bug Bounty.
 
-## 🏆 TryHackMe Progress
+🛡️ Skilled in FortiGate / Sophos, Windows / Linux.
+
+💼 Looking for opportunities in NetSec / Junior Pentester roles.
+
+🏆 TryHackMe Progress
+<p align="center"> <a href="https://tryhackme.com/p/Hackth3Path"> <img src="https://tryhackme-badges.s3.amazonaws.com/Hackth3Path.png" alt="THM Badge" /> </a> </p><p align="center"> <a href="https://tryhackme.com/p/Hackth3Path"> <img src="https://img.shields.io/badge/TryHackMe-Hackth3Path-red?style=for-the-badge&logo=tryhackme&logoColor=white" alt="TryHackMe Profile" /> </a> </p>
+🏅 Badges Earned (16)
+🛡️ cat linux.txt — Being competent in Linux (Common: 51.2%)
+
+🛡️ 3 Day Streak — Achieving a 3 day hacking streak (Common: 15.4%)
+
+🛡️ Webbed — Understands how the world wide web works (Common: 31.8%)
+
+🛡️ World Wide Web — Completing the 'How The Web Works' module (Common: 25.8%)
+
+🛡️ Networking Nerd — Completing the 'Network Fundamentals' module (Common: 12.2%)
+
+🛡️ 7 Day Streak — Achieving a 7 day hacking streak (Common: 26.1%)
+
+🛡️ Metasploitable — Contains the knowledge to use Metasploit (Common: 12.2%)
+
+🛡️ Blue — Hacking into Windows via EternalBlue (Common: 12.8%)
+
+🛡️ OWASP Top 10 — Understanding every OWASP vulnerability (Common: 13%)
+
+⭐ Intro to Web Hacking — Completing the 'Introduction to Web Hacking' module (Rare: 8.9%)
+
+⭐ Burp'ed — Completing the Burp Suite module (Rare: 9.2%)
+
+⭐ Sword Apprentice — Completing the SQLMap room (Rare: 3.7%)
+
+⭐ 30 Day Streak — Hacking for 30 days solid (Rare: 4.7%)
+
+⭐ Shield Apprentice — Completing the FlareVM room (Rare: 3.1%)
+
+⭐ Cyber Ready — Understanding impact of training on teams (Rare: 4.7%)
+
+⭐ Session Held — Completing 4 weekly missions in a row! (Rare: 1.5%)
+
+🛠️ Tech Stack & Tools
+<p align="center"> <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" /> <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" /> <img src="https://img.shields.io/badge/FortiGate-EE3124?style=for-the-badge&logo=fortinet&logoColor=white" /> <img src="https://img.shields.io/badge/Sophos-005EB8?style=for-the-badge&logo=sophos&logoColor=white" /> </p><p align="center"> <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" /> <img src="https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white" /> <img src="https://img.shields.io/badge/Wireshark-1679A7?style=for-the-badge&logo=wireshark&logoColor=white" /> <img src="https://img.shields.io/badge/Nmap-00457C?style=for-the-badge&logo=nmap&logoColor=white" /> </p><p align="center"> <img src="https://img.shields.io/badge/Burp_Suite-FF6633?style=for-the-badge&logo=burpsuite&logoColor=white" /> <img src="https://img.shields.io/badge/Metasploit-2596CD?style=for-the-badge&logo=metasploit&logoColor=white" /> <img src="https://img.shields.io/badge/Kali_Linux-557C94?style=for-the-badge&logo=kali-linux&logoColor=white" /> </p>
+🎯 Currently Working On
+🎓 Preparing for eJPT (eLearnSecurity Junior Penetration Tester)
+
+📚 Learning Web Application Penetration Testing (WAPT)
+
+🐛 Practicing Bug Bounty hunting
+
+🔬 Solving rooms on TryHackMe daily
+
+## 📊 GitHub Activity
 
 <p align="center">
-  <a href="https://tryhackme.com/p/Hackth3Path">
-    <img src="https://tryhackme-badges.s3.amazonaws.com/Hackth3Path.png" alt="THM Badge" />
+  <a href="https://github.com/KyrilosKamal?tab=repositories">
+    <img src="https://img.shields.io/badge/dynamic/json?url=https://api.github.com/users/KyrilosKamal&query=$.public_repos&label=Public%20Repos&color=7B2FFC&style=for-the-badge&logo=github" />
+  </a>
+  <a href="https://github.com/KyrilosKamal?tab=followers">
+    <img src="https://img.shields.io/badge/dynamic/json?url=https://api.github.com/users/KyrilosKamal&query=$.followers&label=Followers&color=7B2FFC&style=for-the-badge&logo=github" />
+  </a>
+  <a href="https://github.com/KyrilosKamal">
+    <img src="https://img.shields.io/badge/dynamic/json?url=https://api.github.com/users/KyrilosKamal&query=$.following&label=Following&color=7B2FFC&style=for-the-badge&logo=github" />
   </a>
 </p>
-
-<p align="center">
-  <a href="https://tryhackme.com/p/Hackth3Path">
-    <img src="https://img.shields.io/badge/TryHackMe-Hackth3Path-red?style=for-the-badge&logo=tryhackme&logoColor=white" alt="TryHackMe Profile" />
-  </a>
-</p>
-
-
----
-
-## 🛠️ Tech Stack & Tools
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" />
-  <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" />
-  <img src="https://img.shields.io/badge/FortiGate-EE3124?style=for-the-badge&logo=fortinet&logoColor=white" />
-  <img src="https://img.shields.io/badge/Sophos-005EB8?style=for-the-badge&logo=sophos&logoColor=white" />
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white" />
-  <img src="https://img.shields.io/badge/Wireshark-1679A7?style=for-the-badge&logo=wireshark&logoColor=white" />
-  <img src="https://img.shields.io/badge/Nmap-00457C?style=for-the-badge&logo=nmap&logoColor=white" />
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Burp_Suite-FF6633?style=for-the-badge&logo=burpsuite&logoColor=white" />
-  <img src="https://img.shields.io/badge/Metasploit-2596CD?style=for-the-badge&logo=metasploit&logoColor=white" />
-  <img src="https://img.shields.io/badge/Kali_Linux-557C94?style=for-the-badge&logo=kali-linux&logoColor=white" />
-</p>
-
----
-
-## 🎯 Currently Working On
-
-- 🎓 Preparing for **eJPT** (eLearnSecurity Junior Penetration Tester)
-- 📚 Learning **Web Application Penetration Testing (WAPT)**
-- 🐛 Practicing **Bug Bounty** hunting
-- 🔬 Solving rooms on **TryHackMe** daily
-
----
-
-### 📊 Stats
-
-Check my live stats on [TryHackMe](https://tryhackme.com/p/Hackth3Path) 🚀
-
----
-
-## 📊 GitHub Stats
-
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=Hackth3Path&show_icons=true&theme=tokyonight&hide_border=true" alt="GitHub Stats" height="180" />
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Hackth3Path&layout=compact&theme=tokyonight&hide_border=true" alt="Top Languages" height="180" />
-</p>
-
-<p align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=Hackth3Path&theme=tokyonight&hide_border=true" alt="GitHub Streak" />
-</p>
-
----
 
 ## 📫 Connect With Me
-
-<p align="center">
-  <a href="https://tryhackme.com/p/Hackth3Path">
-    <img src="https://img.shields.io/badge/TryHackMe-Hackth3Path-red?style=for-the-badge&logo=tryhackme&logoColor=white" />
-  </a>
-  <a href="https://github.com/Hackth3Path">
-    <img src="https://img.shields.io/badge/GitHub-Hackth3Path-181717?style=for-the-badge&logo=github&logoColor=white" />
-  </a>
-</p>
-
----
-
-<p align="center">
-  <i>⚡ "The quieter you become, the more you are able to hear." — Kali Linux</i>
-</p>
-
-<!-- LAST_UPDATED: Never -->
+<p align="center"> <a href="https://tryhackme.com/p/Hackth3Path"> <img src="https://img.shields.io/badge/TryHackMe-Hackth3Path-red?style=for-the-badge&logo=tryhackme&logoColor=white" /> </a> <a href="https://github.com/KyrilosKamal"> <img src="https://img.shields.io/badge/GitHub-KyrilosKamal-181717?style=for-the-badge&logo=github&logoColor=white" /> </a> </p>
+<p align="center"> <i>⚡ "The quieter you become, the more you are able to hear." — Kali Linux</i> </p>
