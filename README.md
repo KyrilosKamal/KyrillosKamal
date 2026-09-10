@@ -51,17 +51,6 @@ goal: NetSec / Junior Pentester
   </a>
 </p>
 
-### 📊 Live Stats
-
-<!-- THM_STATS_START -->
-| Stat | Value |
-|------|-------|
-| 🏅 Rank | Loading... |
-| 🎖️ Badges | Loading... |
-| 🔥 Streak | Loading... |
-| 🚪 Completed Rooms | Loading... |
-| 📅 Last Updated | Pending first run |
-<!-- THM_STATS_END -->
 
 ---
 
